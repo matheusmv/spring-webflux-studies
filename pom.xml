@@ -18,7 +18,6 @@
     <properties>
         <java.version>17</java.version>
         <blockhound.version>1.0.6.RELEASE</blockhound.version>
-        <maven-surefire-plugin.version>2.22.2</maven-surefire-plugin.version>
         <r2dbc-postgresql.version>0.8.10.RELEASE</r2dbc-postgresql.version>
     </properties>
 
@@ -104,14 +103,6 @@
                             <artifactId>lombok</artifactId>
                         </exclude>
                     </excludes>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${maven-surefire-plugin.version}</version>
-                <configuration>
-                    <argLine>-XX:+AllowRedefinitionToAddDeleteMethods</argLine>
                 </configuration>
             </plugin>
         </plugins>
