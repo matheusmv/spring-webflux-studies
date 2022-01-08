@@ -1,1 +1,11 @@
+spring:
+  r2dbc:
+    url: r2dbc:postgresql://localhost:5432/padmin?schema=anime
+    username: padmin
+    password: padmin
 
+  liquibase:
+    url: jdbc:postgresql://localhost:5432/padmin
+    user: padmin
+    password: padmin
+    change-log: classpath:db.changelog/db.changelog-master.yml
