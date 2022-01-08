@@ -9,3 +9,9 @@ spring:
     user: padmin
     password: padmin
     change-log: classpath:db.changelog/db.changelog-master.yml
+
+logging:
+  level:
+    org:
+      springframework:
+        r2dbc: DEBUG

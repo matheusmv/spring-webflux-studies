@@ -7,9 +7,9 @@ import reactor.blockhound.BlockHound;
 @SpringBootApplication
 public class SpringWebfluxStudiesApplication {
 
-    static {
-        BlockHound.install();
-    }
+//    static {
+//        BlockHound.install();
+//    }
 
     public static void main(String[] args) {
         SpringApplication.run(SpringWebfluxStudiesApplication.class, args);
