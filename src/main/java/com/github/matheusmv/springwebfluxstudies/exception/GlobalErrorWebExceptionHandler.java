@@ -2,7 +2,6 @@ package com.github.matheusmv.springwebfluxstudies.exception;
 
 import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.AbstractErrorWebExceptionHandler;
-import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.reactive.error.ErrorAttributes;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.annotation.Order;
@@ -18,6 +17,10 @@ import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
 import java.util.Optional;
+
+import static org.springframework.boot.web.error.ErrorAttributeOptions.Include;
+import static org.springframework.boot.web.error.ErrorAttributeOptions.defaults;
+import static org.springframework.boot.web.error.ErrorAttributeOptions.of;
 
 @Component
 @Order(-2)
@@ -38,10 +41,20 @@ public class GlobalErrorWebExceptionHandler extends AbstractErrorWebExceptionHan
     }
 
     private Mono<ServerResponse> renderErrorResponse(ServerRequest request) {
-        var errorAttributes = getErrorAttributes(request, ErrorAttributeOptions.defaults());
+        var query = request.uri().getQuery();
+        var attributes = isTraceEnabled(query) ? of(Include.STACK_TRACE) : defaults();
+        var errorAttributes = getErrorAttributes(request, attributes);
+
         var status = (int) Optional.ofNullable(errorAttributes.get("status")).orElse(500);
+
         return ServerResponse.status(status)
                 .contentType(MediaType.APPLICATION_JSON)
                 .body(BodyInserters.fromValue(errorAttributes));
+    }
+
+    private boolean isTraceEnabled(String query) {
+        return Optional.ofNullable(query)
+                .filter(s -> s.contains("trace-true"))
+                .isPresent();
     }
 }
