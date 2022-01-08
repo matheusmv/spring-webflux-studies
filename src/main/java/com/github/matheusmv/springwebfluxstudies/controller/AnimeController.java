@@ -4,6 +4,7 @@ import com.github.matheusmv.springwebfluxstudies.domain.Anime;
 import com.github.matheusmv.springwebfluxstudies.service.AnimeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -44,5 +45,11 @@ public class AnimeController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public Mono<Void> update(@PathVariable Long id, @Valid @RequestBody Anime anime) {
         return animeService.update(anime.withId(id));
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public Mono<Void> delete(@PathVariable Long id) {
+        return animeService.delete(id);
     }
 }
