@@ -139,4 +139,16 @@ public class AnimeServiceTest {
                 .expectSubscription()
                 .verifyComplete();
     }
+
+    @Test
+    @DisplayName("update returns Mono error when Anime does not exist")
+    public void updateReturnMonoError_WhenEmptyMonoIsReturned() {
+        BDDMockito.when(animeRepository.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Mono.empty());
+
+        StepVerifier.create(animeService.update(AnimeCreator.createValidAnime()))
+                .expectSubscription()
+                .expectError(ResponseStatusException.class)
+                .verify();
+    }
 }
