@@ -66,6 +66,8 @@ public class AnimeControllerTest {
                 .thenReturn(Mono.just(anime));
         BDDMockito.when(animeService.delete(ArgumentMatchers.anyLong()))
                 .thenReturn(Mono.empty());
+        BDDMockito.when(animeService.update(AnimeCreator.createValidAnime()))
+                .thenReturn(Mono.empty());
     }
 
     @Test
@@ -101,6 +103,14 @@ public class AnimeControllerTest {
     @DisplayName("delete removes the Anime when successful")
     public void deleteRemovesAnime_WhenSuccessful() {
         StepVerifier.create(animeController.delete(1L))
+                .expectSubscription()
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("update save updated Anime and returns Mono empty when successful")
+    public void updateSaveUpdatedAnime_WhenSuccessful() {
+        StepVerifier.create(animeController.update(1L, AnimeCreator.createValidAnime()))
                 .expectSubscription()
                 .verifyComplete();
     }
