@@ -62,6 +62,8 @@ public class AnimeControllerTest {
                 .thenReturn(Flux.just(anime));
         BDDMockito.when(animeService.findById(ArgumentMatchers.anyLong()))
                 .thenReturn(Mono.just(anime));
+        BDDMockito.when(animeService.save(AnimeCreator.createAnimeToBeSaved()))
+                .thenReturn(Mono.just(anime));
     }
 
     @Test
@@ -77,6 +79,17 @@ public class AnimeControllerTest {
     @DisplayName("findById returns a Mono with Anime when it exists")
     public void findByIdReturnMonoOfAnime_WhenItExists() {
         StepVerifier.create(animeController.findById(1L))
+                .expectSubscription()
+                .expectNext(anime)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("save creates an Anime when successful")
+    public void saveCreatesAnime_WhenSuccessful() {
+        var animeToBeSaved = AnimeCreator.createAnimeToBeSaved();
+
+        StepVerifier.create(animeController.save(animeToBeSaved))
                 .expectSubscription()
                 .expectNext(anime)
                 .verifyComplete();
