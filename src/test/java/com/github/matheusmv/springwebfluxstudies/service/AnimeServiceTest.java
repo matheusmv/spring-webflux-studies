@@ -65,6 +65,8 @@ public class AnimeServiceTest {
                 .thenReturn(Mono.just(anime));
         BDDMockito.when(animeRepository.save(AnimeCreator.createAnimeToBeSaved()))
                 .thenReturn(Mono.just(anime));
+        BDDMockito.when(animeRepository.delete(ArgumentMatchers.any(Anime.class)))
+                .thenReturn(Mono.empty());
     }
 
     @Test
@@ -105,6 +107,14 @@ public class AnimeServiceTest {
         StepVerifier.create(animeService.save(animeToBeSaved))
                 .expectSubscription()
                 .expectNext(anime)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("delete removes the Anime when successful")
+    public void deleteRemovesAnime_WhenSuccessful() {
+        StepVerifier.create(animeService.delete(1L))
+                .expectSubscription()
                 .verifyComplete();
     }
 }
