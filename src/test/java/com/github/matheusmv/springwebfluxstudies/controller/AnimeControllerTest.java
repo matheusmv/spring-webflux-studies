@@ -9,6 +9,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.BDDMockito;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import reactor.blockhound.BlockHound;
 import reactor.blockhound.BlockingOperationError;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 import reactor.core.scheduler.Schedulers;
 import reactor.test.StepVerifier;
 
@@ -58,12 +60,23 @@ public class AnimeControllerTest {
     public void setUp() {
         BDDMockito.when(animeService.findAll())
                 .thenReturn(Flux.just(anime));
+        BDDMockito.when(animeService.findById(ArgumentMatchers.anyLong()))
+                .thenReturn(Mono.just(anime));
     }
 
     @Test
     @DisplayName("listAll returns a flux of Anime")
     public void listAllReturnFluxOfAnime_WhenSuccessful() {
         StepVerifier.create(animeController.listAll())
+                .expectSubscription()
+                .expectNext(anime)
+                .verifyComplete();
+    }
+
+    @Test
+    @DisplayName("findById returns a Mono with Anime when it exists")
+    public void findByIdReturnMonoOfAnime_WhenItExists() {
+        StepVerifier.create(animeController.findById(1L))
                 .expectSubscription()
                 .expectNext(anime)
                 .verifyComplete();
